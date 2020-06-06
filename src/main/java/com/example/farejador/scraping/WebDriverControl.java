@@ -1,4 +1,4 @@
-package com.example.farejador;
+package com.example.farejador.scraping;
 
 import java.io.File;
 import java.io.FileNotFoundException;

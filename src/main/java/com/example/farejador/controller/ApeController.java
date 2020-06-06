@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.farejador.RegionTypeEnum;
 import com.example.farejador.models.Ape;
+import com.example.farejador.models.Region;
+import com.example.farejador.repository.RegionRepository;
 import com.example.farejador.service.AdvertisementService;
 import com.example.farejador.service.ApeService;
 
@@ -20,18 +22,18 @@ public class ApeController {
 
     private final AdvertisementService advertisementService;
     private final ApeService apeService;
+    private final RegionRepository regionRepository;
 
     @Autowired
-    public ApeController(AdvertisementService advertisementService, ApeService apeService) {
+    public ApeController(AdvertisementService advertisementService, ApeService apeService, RegionRepository regionRepository) {
         this.advertisementService = advertisementService;
         this.apeService = apeService;
+        this.regionRepository = regionRepository;
     }
 
     @PostMapping
     public void scraping(@RequestParam RegionTypeEnum regionType) throws Exception {
-//        advertisementService.executeScraping(NeighborhoodToScraping.NORTH);
         advertisementService.findApes(regionType);
-//        advertisementService.executeScraping(NeighborhoodToScraping.INGLESES);
     }
 
     @GetMapping

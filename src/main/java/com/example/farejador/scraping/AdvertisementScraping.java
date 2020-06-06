@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.farejador.Advertisemens;
-import com.example.farejador.WebDriverControl;
 import com.example.farejador.filters.Filter;
 import com.example.farejador.models.Ape;
 import com.example.farejador.models.Region;

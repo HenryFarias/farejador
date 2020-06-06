@@ -10,9 +10,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.farejador.Advertisemens;
-import com.example.farejador.Pagination;
-import com.example.farejador.WebDriverControl;
 import com.example.farejador.models.Neighborhood;
 import com.example.farejador.models.Region;
 import com.example.farejador.repository.ApeRepository;
