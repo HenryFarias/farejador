@@ -49,9 +49,7 @@ public class WebDriverControl {
     }
 
     public void setWebDriverControl() throws FileNotFoundException {
-        WebDriver driver = getWebDriver();
-
-        setDriver(driver);
+        setDriver(getWebDriver());
         setWait(new WebDriverWait(driver, 20));
     }
 

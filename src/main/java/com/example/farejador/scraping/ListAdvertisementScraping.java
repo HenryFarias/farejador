@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import com.example.farejador.Advertisemens;
 import com.example.farejador.Pagination;
 import com.example.farejador.WebDriverControl;
+import com.example.farejador.models.Neighborhood;
+import com.example.farejador.models.Region;
 import com.example.farejador.repository.ApeRepository;
 
 @Component
@@ -22,16 +24,14 @@ public class ListAdvertisementScraping {
 
     private static final String BOTAO_IMOVEIS = "//*[@id=\"___gatsby\"]/div[4]/div[1]/div[2]/div[2]/div/div/ul/li[1]/a/span/img";
     private static final String LINK_DDD_48 = "//*[@id=\"content\"]/div/div[2]/div[1]/div[2]/div/ul[1]/li[2]/a";
-    private static final String LINK_NORTE_DA_ILHA = "//*[@id=\"content\"]/div/div[2]/div[1]/div[2]/div[1]/ul[2]/li[1]/a";
     private static final String BOTAO_FILTRAR_POR_BAIRROS = "//*[@id=\"content\"]/div/div[2]/div[1]/div[2]/div/a";
-    private static final String CHECKBOX_INGLESES = "/html/body/div[2]/div/div/div/div/ul[1]/li[5]/label/input";
     private static final String BOTAO_FILTRAR_NA_MODAL = "/html/body/div[2]/div/div/div/a[1]";
-    private static final String MENU_ALUGUEL = "//*[@id=\"content\"]/div/div[1]/div/div/div[2]/div/div/ul/li[2]/a/span[1]";
     private static final String LISTA_DE_ANUNCIOS = "//*[@id=\"ad-list\"]";
     private static final String PROXIMA_PAGINA = "//*/a[text()='Próxima pagina']";
-    private static final String ULTIMA_PAGINA = "//*[@id=\"content\"]/div/div[2]/div[12]/ul/li[17]/a";
+    private static final String ULTIMA_PAGINA = "//*/a[text()='Última pagina']";
     private static final String LISTA_PAGINACAO = "//*[@id=\"content\"]/div/div[2]/div[12]/ul";
     private static final String LI_ANUNCIO = "//*[@id=\"ad-list\"]/li[%s]/a";
+    private static final String MENU_ALUGUEL_CASA_APARTAMENTOS = "//*[@id=\"content\"]/div/div[1]/div/div/div[2]/div/div/ul/li[3]/a/span[1]";
 
     private final WebDriverControl webDriverControl;
     private final Advertisemens advertisemens;
@@ -46,44 +46,42 @@ public class ListAdvertisementScraping {
         this.pagination = pagination;
     }
 
-    public void execute() throws Exception {
+    public void execute(Region region) throws Exception {
         webDriverControl.getDriver().get(HOST);
         Thread.sleep(1000);
 
-        webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(BOTAO_IMOVEIS)));
-        webDriverControl.getDriver().findElement(By.xpath(BOTAO_IMOVEIS)).click();
-        Thread.sleep(1000);
+        isVisibilityandClick(BOTAO_IMOVEIS);
+        isVisibilityandClick(MENU_ALUGUEL_CASA_APARTAMENTOS);
+        isVisibilityandClick(LINK_DDD_48);
+        isVisibilityandClick(region.getXpath());
+        isVisibilityandClick(BOTAO_FILTRAR_POR_BAIRROS);
 
-        webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(LINK_DDD_48)));
-        webDriverControl.getDriver().findElement(By.xpath(LINK_DDD_48)).click();
-        Thread.sleep(1000);
+        selectNeighborhood(region.getNeighborhoods());
 
-        webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(LINK_NORTE_DA_ILHA)));
-        webDriverControl.getDriver().findElement(By.xpath(LINK_NORTE_DA_ILHA)).click();
-        Thread.sleep(1000);
-
-        webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(BOTAO_FILTRAR_POR_BAIRROS)));
-        webDriverControl.getDriver().findElement(By.xpath(BOTAO_FILTRAR_POR_BAIRROS)).click();
-        Thread.sleep(2000);
-
-        webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(CHECKBOX_INGLESES)));
-        webDriverControl.getDriver().findElement(By.xpath(CHECKBOX_INGLESES)).click();
-        Thread.sleep(1000);
-
-        webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(BOTAO_FILTRAR_NA_MODAL)));
-        webDriverControl.getDriver().findElement(By.xpath(BOTAO_FILTRAR_NA_MODAL)).click();
-        Thread.sleep(1000);
-
-        webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(MENU_ALUGUEL)));
-        webDriverControl.getDriver().findElement(By.xpath(MENU_ALUGUEL)).click();
-        Thread.sleep(1000);
+        isVisibilityandClick(BOTAO_FILTRAR_NA_MODAL);
 
         setLastPage();
         Thread.sleep(2000);
         createListAdvertisemens();
     }
 
+    private void selectNeighborhood(List<Neighborhood> neighborhood) throws InterruptedException {
+        neighborhood.stream()
+                    .map(Neighborhood::getXpath)
+                    .forEach(xpath -> webDriverControl.getDriver()
+                        .findElement(By.xpath(xpath))
+                        .click());
+        Thread.sleep(2000);
+    }
+
+    private void isVisibilityandClick(String xpath) throws InterruptedException {
+        webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+        webDriverControl.getDriver().findElement(By.xpath(xpath)).click();
+        Thread.sleep(1000);
+    }
+
     private void setLastPage() throws InterruptedException {
+        Thread.sleep(2000);
         webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(ULTIMA_PAGINA)));
         webDriverControl.getDriver().findElement(By.xpath(ULTIMA_PAGINA)).click();
         Thread.sleep(2000);

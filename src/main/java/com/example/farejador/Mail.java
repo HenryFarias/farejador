@@ -1,17 +1,19 @@
 package com.example.farejador;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import com.example.farejador.models.Ape;
+
 @Component
 public class Mail {
 
     public final JavaMailSender emailSender;
-
-    public static String SUBJECT = "NOVIDADE DO FAREJADOR!";
-    public static String TO = "henrysjfarias@gmail.com";
 
     @Autowired
     public Mail(JavaMailSender emailSender) {
@@ -26,7 +28,9 @@ public class Mail {
         emailSender.send(message);
     }
 
-    public static String mountBodyMail(String links) {
-        return links;
+    public static String mountBodyMail(List<Ape> apes) {
+        return apes.stream()
+                .map(Ape::getLink)
+                .collect(Collectors.joining("\n\n"));
     }
 }
