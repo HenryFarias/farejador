@@ -14,7 +14,8 @@ import com.example.farejador.models.Region;
 @Service
 public class AdvertisementService {
 
-    private static final String TO = "henrysjfarias@gmail.com, simonew.passos@gmail.com";
+    private static final String EMAIL_HENRY = "henrysjfarias@gmail.com";
+    private static final String EMAIL_SIMONE = "simonew.passos@gmail.com";
 
     private final Mail mail;
     private final ApeService apeService;
@@ -33,11 +34,11 @@ public class AdvertisementService {
     public void findApes(RegionTypeEnum regionType) throws Exception {
         Region region = regionService.findByType(regionType);
         scrapingService.execute(region);
-        sendMail(region.getName());
+        sendMail(region.getName(), regionType);
     }
 
-    private void sendMail(String regionName) {
-        List<Ape> apes = apeService.findAllByVisualizedAndFavoriteSystem(false, true);
-        mail.sendSimpleMessage(TO, "NOVIDADE DO FAREJADOR: " + regionName, Mail.mountBodyMail(apes));
+    private void sendMail(String regionName, RegionTypeEnum regionType) {
+        List<Ape> apes = apeService.findAllByVisualizedAndFavoriteSystemAndRegion_Type(false, true, regionType);
+        mail.sendSimpleMessage("NOVIDADE DO FAREJADOR: " + regionName, Mail.mountBodyMail(apes), EMAIL_HENRY, EMAIL_SIMONE);
     }
 }

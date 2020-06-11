@@ -2,6 +2,7 @@ package com.example.farejador.scraping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -53,7 +54,9 @@ public class ListAdvertisementScraping {
         isVisibilityandClick(region.getXpath());
         isVisibilityandClick(BOTAO_FILTRAR_POR_BAIRROS);
 
+        Thread.sleep(2000);
         selectNeighborhood(region.getNeighborhoods());
+        Thread.sleep(2000);
 
         isVisibilityandClick(BOTAO_FILTRAR_NA_MODAL);
 
@@ -63,18 +66,21 @@ public class ListAdvertisementScraping {
     }
 
     private void selectNeighborhood(List<Neighborhood> neighborhood) throws InterruptedException {
-        neighborhood.stream()
-                    .map(Neighborhood::getXpath)
-                    .forEach(xpath -> webDriverControl.getDriver()
-                        .findElement(By.xpath(xpath))
-                        .click());
-        Thread.sleep(2000);
+        List<String> xpaths = neighborhood.stream()
+                .map(Neighborhood::getXpath).collect(Collectors.toList());
+
+        for (String xpath : xpaths) {
+            Thread.sleep(2000);
+            webDriverControl.getDriver()
+                    .findElement(By.xpath(xpath))
+                    .click();
+        }
     }
 
     private void isVisibilityandClick(String xpath) throws InterruptedException {
         webDriverControl.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
         webDriverControl.getDriver().findElement(By.xpath(xpath)).click();
-        Thread.sleep(1000);
+        Thread.sleep(2000);
     }
 
     private void setLastPage() throws InterruptedException {
@@ -96,7 +102,7 @@ public class ListAdvertisementScraping {
     }
 
     private void createListAdvertisemens() throws InterruptedException {
-        List<String> linksAdvertisemens = new ArrayList<>(0);
+        List<String> linksAdvertisemens = new ArrayList<>();
 
         for (int page = 1; page <= pagination.getLastPage(); page++) {
             List<WebElement> advertisemens = findAdvertisemens();

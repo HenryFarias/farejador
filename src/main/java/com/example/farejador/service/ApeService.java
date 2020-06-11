@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.farejador.RegionTypeEnum;
 import com.example.farejador.models.Ape;
 import com.example.farejador.repository.ApeRepository;
 
@@ -18,8 +19,8 @@ public class ApeService {
         this.apeRepository = apeRepository;
     }
 
-    public List<Ape> findAllByVisualized(boolean visualized) {
-        List<Ape> apes = findAllByVisualizedAndFavoriteSystem(visualized, true);
+    public List<Ape> search(boolean visualized, RegionTypeEnum regionType) {
+        List<Ape> apes = findAllByVisualizedAndFavoriteSystemAndRegion_Type(visualized, true, regionType);
 
         apes.forEach(ape -> {
             ape.setVisualized(true);
@@ -27,6 +28,10 @@ public class ApeService {
         });
 
         return apes;
+    }
+
+    List<Ape> findAllByVisualizedAndFavoriteSystemAndRegion_Type(boolean visualized, boolean favoriteSystem, RegionTypeEnum regionType) {
+        return apeRepository.findAllByVisualizedAndFavoriteSystemAndRegion_Type(visualized, true, regionType);
     }
 
     public List<Ape> findAllByVisualizedAndFavoriteSystem(boolean visualized, boolean favoriteSystem) {

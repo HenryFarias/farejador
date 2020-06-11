@@ -59,9 +59,15 @@ public class AdvertisementScraping {
     }
 
     private boolean filter(Region region) {
-        List<Filter> filtersByRegion = this.filters.stream().filter(filter -> filter.isForThis(region)).collect(Collectors.toList());
-        List<Filter> result = filtersByRegion.stream().filter(filter -> filter.executeFilter(webDriverControl)).collect(Collectors.toList());
+        List<Filter> filtersByRegion = this.filters
+                .stream()
+                .filter(filter -> filter.isForThis(region))
+                .collect(Collectors.toList());
 
-        return filtersByRegion == result;
+        List<Filter> result = filtersByRegion.stream()
+                .filter(filter -> filter.executeFilter(webDriverControl))
+                .collect(Collectors.toList());
+
+        return filtersByRegion.size() == result.size();
     }
 }

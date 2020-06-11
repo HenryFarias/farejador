@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.farejador.Converter;
 import com.example.farejador.RegionTypeEnum;
 import com.example.farejador.models.Ape;
-import com.example.farejador.models.Region;
-import com.example.farejador.repository.RegionRepository;
+import com.example.farejador.response.SearchResponse;
 import com.example.farejador.service.AdvertisementService;
 import com.example.farejador.service.ApeService;
 
@@ -22,13 +22,13 @@ public class ApeController {
 
     private final AdvertisementService advertisementService;
     private final ApeService apeService;
-    private final RegionRepository regionRepository;
+    private final Converter converter;
 
     @Autowired
-    public ApeController(AdvertisementService advertisementService, ApeService apeService, RegionRepository regionRepository) {
+    public ApeController(AdvertisementService advertisementService, ApeService apeService, Converter converter) {
         this.advertisementService = advertisementService;
         this.apeService = apeService;
-        this.regionRepository = regionRepository;
+        this.converter = converter;
     }
 
     @PostMapping
@@ -37,8 +37,10 @@ public class ApeController {
     }
 
     @GetMapping
-    public List<Ape> list(@RequestParam(required = false) boolean visualized) {
-        return apeService.findAllByVisualized(visualized);
+    public List<SearchResponse> list(@RequestParam(required = false) boolean visualized,
+                                     @RequestParam RegionTypeEnum regionType) {
+        List<Ape> searchs = apeService.search(visualized, regionType);
+        return converter.mapList(searchs, SearchResponse.class);
     }
 
     @GetMapping(value = "/favorite")
