@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.openqa.selenium.By;
 import org.springframework.stereotype.Component;
 
-import com.example.farejador.RegionTypeEnum;
+import com.example.farejador.enums.RegionTypeEnum;
 import com.example.farejador.scraping.WebDriverControl;
 import com.example.farejador.models.Region;
 

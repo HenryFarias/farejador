@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.example.farejador.enums.IntentionEnum;
 import com.example.farejador.models.Neighborhood;
 import com.example.farejador.models.Region;
 import com.example.farejador.repository.ApeRepository;
@@ -29,27 +30,24 @@ public class ListAdvertisementScraping {
     private static final String ULTIMA_PAGINA = "//*/a[text()='Última pagina']";
     private static final String LISTA_PAGINACAO = "//*[@id=\"content\"]/div/div[2]/div[12]/ul";
     private static final String LI_ANUNCIO = "//*[@id=\"ad-list\"]/li[%s]/a";
-    private static final String MENU_ALUGUEL_CASA_APARTAMENTOS = "//*[@id=\"content\"]/div/div[1]/div/div/div[2]/div/div/ul/li[3]/a/span[1]";
 
     private final WebDriverControl webDriverControl;
-    private final Advertisemens advertisemens;
     private final Pagination pagination;
     private final ApeRepository apeRepository;
 
     @Autowired
-    public ListAdvertisementScraping(WebDriverControl webDriverControl, Advertisemens advertisemens, Pagination pagination, ApeRepository apeRepository) {
+    public ListAdvertisementScraping(WebDriverControl webDriverControl, Pagination pagination, ApeRepository apeRepository) {
         this.webDriverControl = webDriverControl;
         this.apeRepository = apeRepository;
-        this.advertisemens = advertisemens;
         this.pagination = pagination;
     }
 
-    public void execute(Region region) throws Exception {
+    public void execute(Region region, IntentionEnum intentionEnum, Advertisemens advertisemens) throws Exception {
         webDriverControl.getDriver().get(HOST);
         Thread.sleep(1000);
 
         isVisibilityandClick(BOTAO_IMOVEIS);
-        isVisibilityandClick(MENU_ALUGUEL_CASA_APARTAMENTOS);
+        isVisibilityandClick(intentionEnum.getXpath());
         isVisibilityandClick(LINK_DDD_48);
         isVisibilityandClick(region.getXpath());
         isVisibilityandClick(BOTAO_FILTRAR_POR_BAIRROS);
@@ -62,7 +60,7 @@ public class ListAdvertisementScraping {
 
         setLastPage();
         Thread.sleep(2000);
-        createListAdvertisemens();
+        createListAdvertisemens(advertisemens);
     }
 
     private void selectNeighborhood(List<Neighborhood> neighborhood) throws InterruptedException {
@@ -101,12 +99,12 @@ public class ListAdvertisementScraping {
         elementsPagination.get(indexOfFirstPage).click();
     }
 
-    private void createListAdvertisemens() throws InterruptedException {
+    private void createListAdvertisemens(Advertisemens advertisemens) throws InterruptedException {
         List<String> linksAdvertisemens = new ArrayList<>();
 
         for (int page = 1; page <= pagination.getLastPage(); page++) {
-            List<WebElement> advertisemens = findAdvertisemens();
-            populateAdvertisemensLinks(linksAdvertisemens, advertisemens);
+            List<WebElement> advertisemensWebElement = findAdvertisemens();
+            populateAdvertisemensLinks(linksAdvertisemens, advertisemensWebElement);
             toNextPage(page);
         }
 

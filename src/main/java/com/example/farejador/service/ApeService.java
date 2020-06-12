@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.farejador.RegionTypeEnum;
+import com.example.farejador.enums.RegionTypeEnum;
 import com.example.farejador.models.Ape;
 import com.example.farejador.repository.ApeRepository;
 

@@ -15,19 +15,17 @@ import com.example.farejador.repository.ApeRepository;
 public class AdvertisementScraping {
 
     private final WebDriverControl webDriverControl;
-    private final Advertisemens advertisemens;
     private final ApeRepository apeRepository;
     private final List<Filter> filters;
 
     @Autowired
-    public AdvertisementScraping(WebDriverControl webDriverControl, Advertisemens advertisemens, ApeRepository apeRepository, List<Filter> filters) {
+    public AdvertisementScraping(WebDriverControl webDriverControl, ApeRepository apeRepository, List<Filter> filters) {
         this.webDriverControl = webDriverControl;
-        this.advertisemens = advertisemens;
         this.apeRepository = apeRepository;
         this.filters = filters;
     }
 
-    public void execute(Region region) throws Exception {
+    public void execute(Region region, Advertisemens advertisemens) throws Exception {
         int cont = 0;
         System.out.println("TOTAL LINKS :" + advertisemens.getLinks().size());
 

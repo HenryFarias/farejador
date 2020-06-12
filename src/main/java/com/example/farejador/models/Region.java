@@ -12,7 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.example.farejador.RegionTypeEnum;
+import com.example.farejador.enums.IntentionEnum;
+import com.example.farejador.enums.RegionTypeEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

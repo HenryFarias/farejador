@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.farejador.Converter;
-import com.example.farejador.RegionTypeEnum;
+import com.example.farejador.enums.IntentionEnum;
+import com.example.farejador.enums.RegionTypeEnum;
 import com.example.farejador.models.Ape;
 import com.example.farejador.response.SearchResponse;
 import com.example.farejador.service.AdvertisementService;
@@ -32,8 +33,9 @@ public class ApeController {
     }
 
     @PostMapping
-    public void scraping(@RequestParam RegionTypeEnum regionType) throws Exception {
-        advertisementService.findApes(regionType);
+    public void scraping(@RequestParam RegionTypeEnum regionType,
+                         @RequestParam IntentionEnum intention) throws Exception {
+        advertisementService.findApes(regionType, intention);
     }
 
     @GetMapping

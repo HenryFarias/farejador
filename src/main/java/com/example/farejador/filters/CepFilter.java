@@ -1,6 +1,6 @@
 package com.example.farejador.filters;
 
-import static com.example.farejador.RegionTypeEnum.INGLESES;
+import static com.example.farejador.enums.RegionTypeEnum.INGLESES;
 
 import org.openqa.selenium.By;
 import org.springframework.stereotype.Component;

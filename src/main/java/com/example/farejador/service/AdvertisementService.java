@@ -7,7 +7,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.example.farejador.Mail;
-import com.example.farejador.RegionTypeEnum;
+import com.example.farejador.enums.IntentionEnum;
+import com.example.farejador.enums.RegionTypeEnum;
 import com.example.farejador.models.Ape;
 import com.example.farejador.models.Region;
 
@@ -31,14 +32,14 @@ public class AdvertisementService {
     }
 
     @Async
-    public void findApes(RegionTypeEnum regionType) throws Exception {
+    public void findApes(RegionTypeEnum regionType, IntentionEnum intentionEnum) throws Exception {
         Region region = regionService.findByType(regionType);
-        scrapingService.execute(region);
-        sendMail(region.getName(), regionType);
+        scrapingService.execute(region, intentionEnum);
+        sendMail(region.getName(), regionType, intentionEnum);
     }
 
-    private void sendMail(String regionName, RegionTypeEnum regionType) {
+    private void sendMail(String regionName, RegionTypeEnum regionType, IntentionEnum intentionEnum) {
         List<Ape> apes = apeService.findAllByVisualizedAndFavoriteSystemAndRegion_Type(false, true, regionType);
-        mail.sendSimpleMessage("NOVIDADE DO FAREJADOR: " + regionName, Mail.mountBodyMail(apes), EMAIL_HENRY, EMAIL_SIMONE);
+        mail.sendSimpleMessage("NOVIDADES DO FAREJADOR(" + intentionEnum.name() + "): " + regionName, Mail.mountBodyMail(apes), EMAIL_HENRY, EMAIL_SIMONE);
     }
 }
